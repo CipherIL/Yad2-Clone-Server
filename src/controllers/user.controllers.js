@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../models/user');
 const LoginCredentials = require('../models/loginCredentials');
+const Realestate = require('../models/realestate');
 
 const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,20}$/;
 
@@ -51,6 +52,8 @@ const checkValidToken = async (req,res) => {
     res.status(200).send({
         name:user.name,
         surname:user.surname,
+        cellphone: user.cellphone,
+        email: user.email,
     })
 }
 
@@ -85,6 +88,96 @@ const loginUser = async (req,res) => {
     }
 }
 
+const publishRealestate = async (req,res) => {
+    
+    const user = req.user;
+    const {
+        adMailingList,
+        addToMailingList,
+        contactCellphone,
+        contactEmail,
+        contactMailingList,
+        contactName,
+        contactTerms,
+        contactVirtualNumber,
+        contactWeekend,
+        secondaryContactCellphone,
+        secondaryContactName,
+        balconies,
+        builtArea,
+        category,
+        city,
+        description,
+        entryDate,
+        entryFlexible,
+        entryNow,
+        estateCondition,
+        estateType,
+        features,
+        floor,
+        images,
+        mainImage,
+        number,
+        onPillars,
+        parkingSpots,
+        price,
+        publishPlan,
+        rooms,
+        street,
+        totalArea,
+        totalFloors,
+    } = req.body;
+
+    try {
+        const realestate = new Realestate();
+        realestate.owner = user._id;
+        realestate.userData = {
+            adMailingList,
+            addToMailingList,
+            contactCellphone,
+            contactEmail,
+            contactMailingList,
+            contactName,
+            contactTerms,
+            contactVirtualNumber,
+            contactWeekend,
+            secondaryContactCellphone,
+            secondaryContactName,
+        }
+        realestate.realestateData = {
+            balconies,
+            builtArea,
+            category,
+            city,
+            description,
+            entryDate,
+            entryFlexible,
+            entryNow,
+            estateCondition,
+            estateType,
+            features: Object.keys(features).filter(key=>features[key]===true),
+            floor,
+            images: images.filter(img=>img!==""),
+            mainImage,
+            number,
+            onPillars,
+            parkingSpots,
+            price,
+            publishPlan,
+            rooms,
+            street,
+            totalArea,
+            totalFloors,
+        }
+        await realestate.save();
+        res.status(201).send("Realestate published!")
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
 
 module.exports = {
     registerUser,
@@ -92,4 +185,5 @@ module.exports = {
     checkValidToken,
     logoutUser,
     loginUser,
+    publishRealestate,
 }

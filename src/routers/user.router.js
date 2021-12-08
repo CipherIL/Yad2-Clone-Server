@@ -3,7 +3,8 @@ const {registerUser,
        checkEmailAvailability,
        checkValidToken,
        logoutUser,
-       loginUser} = require('../controllers/user.controllers');
+       loginUser,
+       publishRealestate,} = require('../controllers/user.controllers');
 const userAuth = require('../middleware/userAuth');
 
 
@@ -23,4 +24,8 @@ router.get('/user/logout', userAuth, logoutUser)
 
 //Login, and return user info
 router.post('/user/login', loginUser)
+
+//Publish realestate
+router.post('/user/publish-realestate',userAuth, publishRealestate)
+
 module.exports = router;
