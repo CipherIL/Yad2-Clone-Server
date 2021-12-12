@@ -134,6 +134,9 @@ const realestateSchema = new mongoose.Schema({
     owner: {
         type: mongoose.Types.ObjectId,
         required: true,
+    },
+    date: {
+        type: String,
     }
 })
 

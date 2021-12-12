@@ -131,6 +131,7 @@ const publishRealestate = async (req,res) => {
     try {
         const realestate = new Realestate();
         realestate.owner = user._id;
+        realestate.date = Date.now();
         realestate.userData = {
             adMailingList,
             addToMailingList,
