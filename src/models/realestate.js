@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const realestateSchema = new mongoose.Schema({
     realestateData: {
         balconies: {
-            type: String,
+            type: Number,
             required: true,
         },
         builtArea: {
-            type: String,
+            type: Number,
             required: true,
         },
         category: {
@@ -23,7 +23,7 @@ const realestateSchema = new mongoose.Schema({
             required: true,
         },
         entryDate: {
-            type: String,
+            type: Date,
         },
         entryFlexible: {
             type: Boolean,
@@ -45,7 +45,7 @@ const realestateSchema = new mongoose.Schema({
             type: String,
         }],
         floor: {
-            type: String,
+            type: Number,
         },
         images: [{
             type: String, 
@@ -60,11 +60,11 @@ const realestateSchema = new mongoose.Schema({
             type: Boolean,
         },
         parkingSpots: {
-            type: String,
+            type: Number,
             required: true,
         },
         price: {
-            type: String,
+            type: Number,
             required: true,
         },
         publishPlan: {
@@ -72,7 +72,7 @@ const realestateSchema = new mongoose.Schema({
             required: true,
         },
         rooms: {
-            type: String,
+            type: Number,
             required: true,
         },
         street: {
@@ -80,11 +80,11 @@ const realestateSchema = new mongoose.Schema({
             required: true,
         },
         totalArea: {
-            type: String,
+            type: Number,
             required: true,
         },
         totalFloors: {
-            type: String,
+            type: Number,
         },        
     },
     userData: {

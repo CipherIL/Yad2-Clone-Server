@@ -21,6 +21,7 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
+    "chalk": "^5.0.0",
     "env-cmd": "^10.1.0",
     "nodemon": "^2.0.15"
   }
