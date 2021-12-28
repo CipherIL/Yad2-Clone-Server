@@ -1,7 +1,10 @@
 const Realestate = require('../models/realestate');
 
+const typesReducer = (prev,curr) => [...prev, ...curr];
+
 const getSearchParams = (searchObj) => {
     const searchParams = {};
+    console.log(searchObj)
     searchParams["realestateData.category"] = searchObj.category
     Object.keys(searchObj).forEach(key=>{
         switch (key) {
@@ -46,6 +49,64 @@ const getSearchParams = (searchObj) => {
                 }
                 break;
             }
+            case "types" : {
+                const types = Object.values(searchObj[key]).reduce(typesReducer);
+                if(types.length !== 0)
+                    searchParams['realestateData.estateType'] = { $in: types };
+                break;
+            }
+            case "minFloor" : {
+                if(searchObj[key] === '-1' || searchObj[key] === 'מרתף/פרטר' || !searchObj[key]) break;
+                searchParams['realestateData.floor'] = searchParams['realestateData.floor']?
+                { ...searchParams['realestateData.floor'], $gte: parseInt(searchObj[key]) }:
+                { $gte: parseInt(searchObj[key]) }
+                break;
+            }
+            case "maxFloor" : {
+                if(searchObj[key]==="18" || !searchObj[key]) break;
+                searchParams['realestateData.floor'] = searchParams['realestateData.floor']?
+                { ...searchParams['realestateData.floor'], $lte: parseInt(searchObj[key]) }:
+                { $lte: parseInt(searchObj[key]) }
+                break;
+            }
+            case "minArea" : {
+                if(searchObj[key]==="") break;
+                searchParams['realestateData.builtArea'] = searchParams['realestateData.builtArea']?
+                {...searchParams['realestateData.builtArea'], $gte: parseInt(searchObj[key])}:
+                { $gte: parseInt(searchObj[key]) };
+                break;
+            }
+            case "maxArea" : {
+                if(searchObj[key]==="") break;
+                searchParams['realestateData.builtArea'] = searchParams['realestateData.builtArea']?
+                {...searchParams['realestateData.builtArea'], $lte: parseInt(searchObj[key])}:
+                { $lte: parseInt(searchObj[key]) };
+                break;
+            }
+            case "entryDate" : {
+                if(searchObj[key]==="" || !searchObj[key]) break;
+                //if entryNow is exactly a boolean true!
+                if(searchObj["entryNow"] === true) break;
+                searchParams['realestateData.entryDate'] = {$gte: new Date(searchObj[key])};
+            }
+            case "entryNow" : {
+                if(!searchObj[key]) {
+                    searchParams['realestateData.entryNow'] = false;
+                } else {
+                    searchParams['realestateData.entryNow'] = true;
+                }
+            }
+            case "freeText" : {
+                if(!searchObj[key]|| searchObj[key]==="") break;
+                searchParams['realestateData.description'] = {$regex:RegExp(`${searchObj[key]}`)};
+                break;
+            }
+            //TODO: check that this works
+            case "features" : {
+                if(!searchObj[key] || searchObj[key]===[]) break;
+                searchParams['realestateData.features'] = {$all:searchObj[key]};
+                break;
+            }
             default: break;
         }
     })
@@ -62,7 +123,6 @@ const getRealestatePosts = async (req,res) => {
     try {
         const posts = await Realestate.find(searchParams);
         if(posts.length === 0) return res.status(404).send("No posts found");
-        console.log(posts)
         return res.status(200).send(posts);
     } catch(err) {
         return res.status(500).send("Internal Server Error");
