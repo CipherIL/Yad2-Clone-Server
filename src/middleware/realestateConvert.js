@@ -1,7 +1,7 @@
 const typesReducer = (prev,curr) => [...prev, ...curr];
 
 const getSearchParams = (req,res,next) => {
-    const searchObj = req.body;
+    const searchObj = req.body.searchParams;
     const searchParams = {};
     searchParams["realestateData.category"] = searchObj.category
     Object.keys(searchObj).forEach(key=>{
