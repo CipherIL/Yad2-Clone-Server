@@ -13,11 +13,11 @@ const checkEmailAvailability = async (req,res) => {
     try {
         const user = await User.findOne({email});
         if(!user) //no user found, email available
-            return res.status(200).send("Email available");
+            return res.status(200).send({message: "Email available"});
         else //user found, email unavailable
-            return res.status(400).send("המייל הזה כבר קיים אצלנו. כדאי לנסות להתחבר");
-        } catch(err) {
-        res.status(500).send("קיימת תקלה זמנית בשרתים שלנו, אנא נסו שוב מאוחר יותר");
+            return res.status(400).send({message: "המייל הזה כבר קיים אצלנו. כדאי לנסות להתחבר"});
+    } catch(err) {
+        res.status(500).send({message: "קיימת תקלה זמנית בשרתים שלנו, אנא נסו שוב מאוחר יותר"});
     }
 }
 
@@ -178,7 +178,6 @@ const publishRealestate = async (req,res) => {
         res.status(500).send("Internal Server Error");
     }
 }
-
 
 module.exports = {
     registerUser,
